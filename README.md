@@ -1,2 +1,2 @@
 # SneakersR-Us!
-[sneakrus](https://user-images.githubusercontent.com/89389822/139604781-c5149607-e1e6-4be3-b38a-40881370fda7.gif)
+![sneakrus](https://user-images.githubusercontent.com/89389822/139604814-79cce6ce-1328-4a0c-bdb1-3f1d67de0c70.gif)
