@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="stylethree.css">
+    <script src="https://kit.fontawesome.com/4193a23255.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="container">
@@ -36,34 +37,23 @@
             </div>
         </div>
 
-        <div>
-          <h3 id="">WhatsIn?</h3>
-          <ul class="board">
-          <% for(var i=0; i<whatsIn.length; i++) {%>
-            <li class="board">
-              <span><%= whatsIn[i].style %></span>
-              <span><%= whatsIn[i].size %></span>
-              <span><button class="request" type="submit">Request</button>
-              <!-- <span><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
-              <span><i class="fa fa-thumbs-down" aria-hidden="true"></i></span>
-              <span><i class="fa fa-trash" aria-hidden="true"></i></span> -->
-            </li>
-          <% } %>
-          </ul>
-        </div>
 
         <div class="col-sm-6">
-          <h3 id="special">Special Requests</h3>
+          <h3 id="special">Trade board</h3>
           <ul class="board">
           <% for(var i=0; i<sneakers.length; i++) {%>
             <li class="board">
+              
               <span><%= sneakers[i].user %></span>
               <span><%= sneakers[i].style %></span>
               <span><%= sneakers[i].size %></span>
-              <span><button class="delete" type="submit">trash</button>
+              <span><%= sneakers[i].tradeReqBy %></span>
+              <span><i class="fas fa-shopping-cart" aria-hidden="true"></i></span>
+              <span><i class="fa fa-trash" aria-hidden="true"></i></span>
+              <!-- <span><button class="delete" type="submit">trash</button></span> -->
               <!-- <span><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
               <span><i class="fa fa-thumbs-down" aria-hidden="true"></i></span> -->
-              <span><i class="fa fa-trash" aria-hidden="true"></i></span>
+              <!-- <span><i class="fa fa-trash" aria-hidden="true"></i></span> -->
             </li>
           <% } %>
           </ul>
@@ -71,9 +61,9 @@
           <h2>Post a special request that you want!</h2>
         <% if (user.local.email) { %>
           <form action="/special" method="POST">
-            <input type="text" value="<%= user.local.email %>" name="user">
-            <input type="text" placeholder="style" name="style">
-            <input type="number" step="0.1" placeholder="size" name="size">
+            <input type="text"  name="user" required>
+            <input type="text" placeholder="style" name="style" required>
+            <input type="number" step="0.1" placeholder="size" name="size" required>
             <button type="submit">Submit</button>
           </form>
         <% } %>

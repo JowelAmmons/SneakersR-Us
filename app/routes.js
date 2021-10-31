@@ -1,6 +1,7 @@
 module.exports = function(app, passport, db) {
 
 // normal routes ===============================================================
+let inventory = [{style: 'Ovo 12\'s', size: 'any'}, {style: 'Oreo 4\s', size: 'any'}, {style: 'Grape 4\'s', size: 'any'}, {style: 'Air 1\'s', size: 'any'}, {style: 'lightning 4\'s', size: 'any'}, {style: 'OG Fire Red 4\'s', size: 'any'}, {style: 'Yeezy 350 V2 Zebra',size: 'any'}, {style: 'Yeezy 350 V2 Citrin', size: 'any'}]
 
     // show the home page (will also have our login links)
     app.get('/', function(req, res) {
@@ -9,14 +10,11 @@ module.exports = function(app, passport, db) {
 
     // PROFILE SECTION =========================
     app.get('/profile', isLoggedIn, function(req, res) {
-        let inventory = [{style: 'Ovo 12\'s', size: 'any'}, {style: 'Oreo 4\s', size: 'any'}, {style: 'Grape 4\'s', size: 'any'}, {style: 'Air 1\'s', size: 'any'}, {style: 'lightning 4\'s', size: 'any'}, {style: 'OG Fire Red 4\'s', size: 'any'}, {style: 'Yeezy 350 V2 Zebra',size: 'any'}, {style: 'Yeezy 350 V2 Citrin', size: 'any'}]
-        console.log(inventory)
         db.collection('sneakers').find().toArray((err, result) => {
           if (err) return console.log(err)
           res.render('profile.ejs', {
             user : req.user,
             sneakers: result,
-            whatsIn: inventory
           })
         })
     });
@@ -29,20 +27,23 @@ module.exports = function(app, passport, db) {
 
 // message board routes ===============================================================
 
-app.get('/profile', (req, res) => {
-  let inventory = [{style: 'Ovo 12\'s', size: 'any'}, {style: 'Oreo 4\s', size: 'any'}, {style: 'Grape 4\'s', size: 'any'}, {style: 'Air 1\'s', size: 'any'}, {style: 'lightning 4\'s', size: 'any'}, {style: 'OG Fire Red 4\'s', size: 'any'}, {style: 'Yeezy 350 V2 Zebra',size: 'any'}, {style: 'Yeezy 350 V2 Citrin', size: 'any'}]
-  console.log(inventory)
-  db.collection('sneakers').find().toArray((err, result) => {
-    if (err) return console.log(err)
-    res.render('profile.ejs', {
-      sneakers: result,
-      whatsIn: inventory 
-    })
-  })
-})
+// app.get('/profile', (req, res) => {
+//   let inventory = [{style: 'Ovo 12\'s', size: 'any'}, {style: 'Oreo 4\s', size: 'any'}, {style: 'Grape 4\'s', size: 'any'}, {style: 'Air 1\'s', size: 'any'}, {style: 'lightning 4\'s', size: 'any'}, {style: 'OG Fire Red 4\'s', size: 'any'}, {style: 'Yeezy 350 V2 Zebra',size: 'any'}, {style: 'Yeezy 350 V2 Citrin', size: 'any'}]
+//   console.log(inventory)
+//   db.collection('sneakers').find().toArray((err, result) => {
+//     if (err) return console.log(err)
+//     res.render('profile.ejs', {
+//       sneakers: result,
+//       whatsIn: inventory 
+//     })
+//   })
+// })
 
 app.post('/special', (req, res) => {
-  db.collection('sneakers').save({user: req.body.user, style: req.body.style, size: req.body.size}, (err, result) => {
+  db.collection('sneakers').save({
+    user: req.body.user, 
+    style: req.body.style, 
+    size: req.body.size,}, (err, result) => {
     if (err) return console.log(err)
     console.log('saved to database')
     console.log(result)
@@ -50,23 +51,20 @@ app.post('/special', (req, res) => {
   })
 })
 
-    // app.put('/messages', (req, res) => {
-    //   db.collection('messages')
-    //   .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
-    //     $set: {
-    //       thumbUp:req.body.thumbUp + 1
-    //     }
-    //   }, {
-    //     sort: {_id: -1},
-    //     upsert: true
-    //   }, (err, result) => {
-    //     if (err) return res.send(err)
-    //     res.send(result)
-    //   })
-    // })
+    app.put('/sneakers', (req, res) => {
+        db.collection('sneakers').findOneAndUpdate({user: req.body.user, style: req.body.style, size: req.body.size, tradeReqby : req.user.local.username}, {
+        $set: {tradeReqBy : req.body.user}
+      }, {
+        sort: {_id: -1},
+        upsert: true
+      }, (err, result) => {
+        if (err) return res.send(err)
+        res.send(result)
+      })
+    })
 
-    app.delete('/special', (req, res) => {
-      db.collection('sneakers').findOneAndDelete({user: req.body.user, style: req.body.style}, (err, result) => {
+    app.delete('/sneakers', (req, res) => {
+      db.collection('sneakers').findOneAndDelete({user: req.body.user, style: req.body.style, size: req.body.size, tradeReqBy : req.body.user}, (err, result) => {
         if (err) return res.send(500, err)
         res.send('Message deleted!')
       })
